@@ -26,16 +26,5 @@ class SPP_document:
         :return:
         :rtype:
         """
-        # DRAFT
         concat_name = self.title + '_' + self.web_link + '_' + str(self.pub_date.timestamp())
         return sha256(concat_name.encode('utf8')).digest()
-
-        # return sha256((self.title, self.web_link, self.pub_date))
-
-
-if __name__ == "__main__":
-    dt = datetime.now()
-
-    d = SPP_document(1, '1', '2', '3', '4', '5', {}, dt, dt)
-    d2 = SPP_document(1, '1', '2', '3', '4', '5', {}, dt, dt)
-    print(d.hash == d2.hash)
