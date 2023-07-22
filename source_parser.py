@@ -3,7 +3,7 @@
 
 1/2 документ плагина
 """
-
+import logging
 import os
 import time
 
@@ -22,6 +22,7 @@ class SOURCE_PARSER_CLASS:
 
     """
 
+    SOURCE_NAME = '<unique source name>'
     _content_document: list[SPP_document]
 
     def __init__(self, *args, **kwargs):
@@ -33,6 +34,11 @@ class SOURCE_PARSER_CLASS:
         """
         # Обнуление списка
         self._content_document = []
+
+        # Логер должен подключаться так. Вся настройка лежит на платформе
+        self.logger = logging.getLogger(self.__class__.__name__)
+        self.logger.debug(f"Parser class init completed")
+        self.logger.info(f"Set source: {self.SOURCE_NAME}")
         ...
 
     def content(self) -> list[SPP_document]:
@@ -41,7 +47,9 @@ class SOURCE_PARSER_CLASS:
         :return:
         :rtype:
         """
+        self.logger.debug("Parse process start")
         self._parse()
+        self.logger.debug("Parse process finished")
         return self._content_document
 
     def _parse(self):
@@ -50,7 +58,30 @@ class SOURCE_PARSER_CLASS:
         :return:
         :rtype:
         """
+        # HOST - это главная ссылка на источник, по которому будет "бегать" парсер
+        self.logger.debug(F"Parser enter to {HOST}")
+
+        # ========================================
+        # Тут должен находится блок кода, отвечающий за парсинг конкретного источника
+        # -
+
+        # Логирование найденного документа
+        self.logger.info(self._find_document_text_for_logger(document))
+
+        # ---
+        # ========================================
         ...
+
+    @staticmethod
+    def _find_document_text_for_logger(doc: SPP_document):
+        """
+        Единый для всех парсеров метод, который подготовит на основе SPP_document строку для логера
+        :param doc: Документ, полученный парсером во время своей работы
+        :type doc:
+        :return: Строка для логера на основе документа
+        :rtype:
+        """
+        return f"Find document | name: {doc.title} | link to web: {doc.web_link} | publication date: {doc.pub_date}"
 
     @staticmethod
     def some_necessary_method():
@@ -66,7 +97,7 @@ class SOURCE_PARSER_CLASS:
     @staticmethod
     def nasty_download(driver, path: str, url: str) -> str:
         """
-        Метод для "противных" источников. Для разных источника он может отличатся.
+        Метод для "противных" источников. Для разных источника он может отличаться.
         Но основной его задачей является:
             доведение driver селениума до файла непосредственно.
 
