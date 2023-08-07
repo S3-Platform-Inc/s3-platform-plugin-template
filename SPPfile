@@ -4,21 +4,28 @@
 #	Ф.И.О
 #	NSPK DI
 
+# указание уникального имени источника
 SOURCE <source name>
 
 # Тут указывается имя файла с парсером
+# PARSER <название файла с парсером без расширения>
 PARSER source_parser
 
+# Настройка задачи
+# SETENV <атрибут управления> [<параметры>, ...]
 SETENV LogMode debug
 
 # Этот параметр нужен, если ты имеешь дело с противным источником.
+# BUS_ADD <название дополнительного потока> <объект / модуль / дополнительный модуль из класса парсера>
 BUS_ADD s_download PARSER/SOURCE_PARSER_CLASS/nasty_download
 
 # Тут указывается класс парсера и метод, который платформа будет вызывать
+# START <название класса парсера> <метод, который должен вернуть список документов>
 START SOURCE_PARSER_CLASS content
 
 
 # Такая конфигурация модулей подходит для "файловых противных источников"
+# ADD <название модуля> [<опциональные параметры>, ...]
 ADD FilterOnlyNewDocumentWithDB
 ADD DownloadDocumentsThroughSeleniumTemp
 ADD ExtractTextFromFile
