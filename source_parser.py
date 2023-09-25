@@ -7,7 +7,7 @@ import logging
 import os
 import time
 
-from spp_document import SPP_document
+from src.spp.types import SPP_document
 
 
 class SOURCE_PARSER_CLASS:
