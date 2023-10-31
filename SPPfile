@@ -19,6 +19,10 @@ SETENV LogMode debug
 # BUS_ADD <название дополнительного потока> <объект / модуль / дополнительный модуль из класса парсера>
 BUS_ADD s_download PARSER/SOURCE_PARSER_CLASS/nasty_download
 
+# Этот параметр отвечает за то какие модули долждны быть переданы в класс парсера при его инициализации
+# INIT {key} {module name}
+INIT webdriver WebDriver
+
 # Тут указывается класс парсера и метод, который платформа будет вызывать
 # START <название класса парсера> <метод, который должен вернуть список документов>
 START SOURCE_PARSER_CLASS content
