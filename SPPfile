@@ -15,6 +15,10 @@ PARSER source_parser
 # SETENV <атрибут управления> [<параметры>, ...]
 SETENV LogMode debug
 
+# Настройка интервала перезапуска
+# SET restart-interval { postgresql interval string }
+SET restart-interval 2 days
+
 # Этот параметр нужен, если ты имеешь дело с противным источником.
 # BUS_ADD <название дополнительного потока> <объект / модуль / дополнительный модуль из класса парсера>
 BUS_ADD s_download PARSER/SOURCE_PARSER_CLASS/nasty_download
