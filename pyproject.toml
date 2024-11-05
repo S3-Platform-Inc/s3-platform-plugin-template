@@ -1,0 +1,22 @@
+[tool.poetry]
+name = "s3-platform-plugin-template"
+version = "0.3.0"
+description = "A repository that provides a pure template to make it easier to create a new plugin project"
+authors = ["CuberHuber, Roman Lupashko <lupashcko.rom@yandex.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+s3p-sdk = "^0.2.3"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^8.2.2"
+
+
+[tool.poetry.group.optionally.dependencies]
+selenium = "4.15.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

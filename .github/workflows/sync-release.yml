@@ -1,0 +1,31 @@
+name: Sync plugin to S3
+
+on:
+   release:
+     types: [published]
+
+env:
+  PYTHON_VERSION: '3.11.5'
+  PATH_TO_CONFIG: 'src.s3_platform_plugin_template'
+  CONFIG_FILE: 'config.json'
+
+permissions:
+  contents: write
+
+jobs:
+  generate-and-release:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: S3 Sync
+      uses: peter-evans/s3-backup@v1
+      env:
+        ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
+        SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
+        MIRROR_TARGET: ${{ secrets.S3_MIRROR_TARGET }}
+        STORAGE_SERVICE_URL: ${{ secrets.S3_SERVICE_URL }}
+        AWS_REGION: ${{ secrets.S3_REGION }}
+      with:
+        args: --overwrite --remove
