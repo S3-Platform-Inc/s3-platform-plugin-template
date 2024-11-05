@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - "main"
+      - "patch*"
     types:
       - closed
 #  push:
