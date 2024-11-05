@@ -39,7 +39,7 @@ jobs:
         # if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: build config
       run: |
-        python -c "import json; from ${{PATH_TO_CONFIG}} import config; print(json.dumps(config.dict()))" > ${{CONFIG_FILE}}
+        python -c "import json; from ${{env.PATH_TO_CONFIG}} import config; print(json.dumps(config.dict()))" > ${{env.CONFIG_FILE}}
     - name: Get current date for tag
       id: get_date
       run: echo "::set-output name=TAG_NAME::v$(date +'%Y%m%d%H%M%S')"
@@ -67,6 +67,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./${{CONFIG_FILE}}
-        asset_name: ${{CONFIG_FILE}}
+        asset_path: ./${{env.CONFIG_FILE}}
+        asset_name: ${{env.CONFIG_FILE}}
         asset_content_type: application/json
