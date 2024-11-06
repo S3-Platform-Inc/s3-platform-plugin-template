@@ -9,7 +9,7 @@ from s3p_sdk.plugin.config import (
     modules,
     payload
 )
-from s3p_sdk.plugin.config.type import SOURCE
+from s3p_sdk.plugin.types import SOURCE
 from s3p_sdk.module import (
     WebDriver,
 )
