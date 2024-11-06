@@ -15,7 +15,7 @@ on:
 
 env:
   PYTHON_VERSION: '3.11.5'
-  PATH_TO_CONFIG: 'src.s3_platform_plugin_template'
+  PATH_TO_CONFIG: 'src.s3_platform_plugin_template.config'
   CONFIG_FILE: 'config.json'
 
 permissions:
