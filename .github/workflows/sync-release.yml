@@ -28,6 +28,6 @@ jobs:
         MIRROR_TARGET: '${{ secrets.S3_BACKET_NAME }}${{ secrets.S3_MIRROR_PATH }}${{ env.PLUGIN_NAME }}'
         STORAGE_SERVICE_URL: ${{ secrets.S3_SERVICE_URL }}
         AWS_REGION: ${{ secrets.S3_REGION }}
-        MIRROR_SOURCE: './'
+        MIRROR_SOURCE: './src/${{ env.PLUGIN_NAME }}'
       with:
         args: --overwrite --remove
