@@ -2,7 +2,7 @@ name: Sync plugin to S3
 
 on:
    release:
-     types: [published]
+     types: [published, created]
 
 env:
   PYTHON_VERSION: '3.11.5'
