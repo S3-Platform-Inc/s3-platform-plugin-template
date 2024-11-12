@@ -22,6 +22,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Prepare files for upload
+      run: |
+        mkdir -p _temp_upload_files
+        cp -r src _temp_upload_files/
+        cp plugin.xml _temp_upload_files
+
     - name: S3 Sync
       uses: peter-evans/s3-backup@v1
       env:
@@ -30,6 +36,6 @@ jobs:
         MIRROR_TARGET: '${{ secrets.S3_BACKET_NAME }}${{ secrets.S3_MIRROR_PATH }}${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}'
         STORAGE_SERVICE_URL: ${{ secrets.S3_SERVICE_URL }}
         AWS_REGION: ${{ secrets.S3_REGION }}
-        MIRROR_SOURCE: './'
+        MIRROR_SOURCE: './_temp_upload_files'
       with:
         args: --overwrite --remove
