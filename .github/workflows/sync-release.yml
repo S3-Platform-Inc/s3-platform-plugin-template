@@ -5,10 +5,6 @@ on:
      types: [published]
 
 env:
-  PYTHON_VERSION: '3.11.5'
-  PATH_TO_CONFIG: 'src.s3_platform_plugin_template'
-  CONFIG_FILE: 'config.json'
-  PLUGIN_NAME: 's3_platform_plugin_template'
   REPO_NAME: ${{ github.event.repository.name }}
   REPO_OWNER: ${{ github.event.repository.owner.login }}
 
@@ -33,7 +29,7 @@ jobs:
       env:
         ACCESS_KEY_ID: ${{ secrets.S3_ACCESS_KEY_ID }}
         SECRET_ACCESS_KEY: ${{ secrets.S3_SECRET_ACCESS_KEY }}
-        MIRROR_TARGET: '${{ secrets.S3_BACKET_NAME }}${{ secrets.S3_MIRROR_PATH }}${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}'
+        MIRROR_TARGET: '${{ secrets.S3_BACKET_NAME }}/plugins/${{ env.REPO_OWNER }}/${{ env.REPO_NAME }}'
         STORAGE_SERVICE_URL: ${{ secrets.S3_SERVICE_URL }}
         AWS_REGION: ${{ secrets.S3_REGION }}
         MIRROR_SOURCE: './_temp_upload_files'

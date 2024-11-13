@@ -76,6 +76,7 @@ class TestConfigPayload:
         _pentry = fix_plugin_config.__dict__.get(PluginStructure.PAYLOAD).__dict__.get('entry')
 
         assert isinstance(_pentry.__dict__.get('method'), str)
+        assert _pentry.__dict__.get('method') == 'content', f"Метод запуска плагина {_pentry.__dict__.get('method')} не соответствуе значению по умолчанию `content`"
         assert isinstance(_pentry.__dict__.get('params'), list) and all([isinstance(it, AbcParamConfig) for it in _pentry.__dict__.get('params')])
 
     def test_config_plugin_files(self, fix_plugin_config, project_config):
