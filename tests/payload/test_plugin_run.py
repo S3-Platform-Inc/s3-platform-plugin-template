@@ -2,6 +2,7 @@ import datetime
 import importlib.util
 import os
 from typing import Type
+import sys
 
 import pytest
 from pathlib import Path
@@ -37,12 +38,13 @@ class TestPayloadRun:
     def fix_s3pRefer(self):
         return S3PRefer(1, 'test-refer', SOURCE, None)
 
-    @pytest.fixture(scope="module")
+    @pytest.fixture(scope="module", autouse=True)
     def fix_payload(self, project_config, fix_plugin_config) -> Type[S3PParserBase]:
+        MODULE_NAME: str = 's3p_test_plugin_payload'
         """Загружает конфигурацию из config.py файла по динамическому пути на основании конфигурации"""
         payload_path = Path(project_config.root) / 'src' / project_config.name / fix_plugin_config.payload.file
         assert os.path.exists(payload_path)
-        spec = importlib.util.spec_from_file_location('s3p_test_plugin_payload', payload_path)
+        spec = importlib.util.spec_from_file_location(MODULE_NAME, payload_path)
         module = importlib.util.module_from_spec(spec)
         spec.loader.exec_module(module)
         # Get the class from the module
@@ -56,7 +58,7 @@ class TestPayloadRun:
 
     def run_payload(self, payload: Type[S3PParserBase], driver: WebDriver, refer: S3PRefer, max_document: int,
                     timeout: int = 2):
-        from s3_platform_plugin_template.template_payload import MyTemplateParser
+        from src.s3_platform_plugin_template.template_payload import MyTemplateParser
         if isinstance(payload, type(MyTemplateParser)):
             _payload = payload(refer=refer, web_driver=driver, max_count_documents=max_document, last_document=None)
 
