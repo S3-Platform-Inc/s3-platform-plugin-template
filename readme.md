@@ -1,7 +1,7 @@
 # S3 Platform Plugin Template
 
 
-> [!INFO]
+> [!NOTE]
 > Нажми на <kbd>Use this template</kbd> кнопку и клонируй его в IDE.
 
 S3 Platform Plugin Template - это репозиторий предоставляет чистый шаблон для простого и быстрого создания проекта плагина (Посмотри статью [Creating a repository from a template](https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template)).
@@ -35,3 +35,73 @@ my-plugin/                      # Репозиторий
 │
 └── plugin.xml                  # Основной декларативный файл плагина
 ```
+
+### Plugin.xml
+Стандартный вид `plugin.xml`:
+```xml
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="[ uniq plugin name ]">
+    <version>[ version ]</version>
+</project>
+```
+- уникальное имя плагина [`uniq plugin name`]. Используется как имя каталога с файлами плагина и в тестах.
+- версия плагина [`version`]. Имеет формат `[N > 0].[N >= 0]`. Последняя стабильная версия по умолчанию - `3.0`.
+
+### src
+В каталоге `src` должен обязательно находиться каталог, названный [`uniq plugin name`] (Такое же название, как и в [plugin.xml](#pluginxml)). 
+
+### uniq plugin name
+- Каталог плагина должен обязательно содержать файл `repo/src/[uniq plugin name]/config.py`.
+- Все дополнительные файлы плагина (парсер, вспомогательные файлы) должны быть расположены в этом разделе `repo/src/[uniq plugin name]/`.
+
+#### config.py
+Файл config.py - это обязательный файл плагина. 
+
+> [!WARNING]
+> Нужно просмотреть файл `config.py` и поля, связанные с уникальными названиями и файлами.
+
+> [!TIP]
+> Читайте комментарии в файле `config.py`
+
+
+## GitHub Actions
+В репозитории настроен CI/CD на GitHub Actions.
+Для его полноценной работы необходимо добавить секреты в репозиторий на стороне GitHub (см. [раздел](https://github.com/S3-Platform-Inc/s3-platform-plugin-template/settings/secrets/actions)).
+
+Если репозиторий с плагином создан в аккаунте организации [S3 Platform](https://github.com/S3-Platform-Inc), то можно воспользоваться секретами организации. В противном случае нужно создавать секреты репозитория.
+
+### Секреты
+
+**CI/СD:**
+- `RELEASE_TOKEN`: создается в GitHub для работы с релизами репозиториев (см. [здесь](https://github.com/settings/personal-access-tokens)).
+
+S3 Platform использует Amazon S3 в качестве [объектного хранилища](https://ru.wikipedia.org/wiki/Amazon_S3).
+Следующие секреты требуются для подключения к нему (_Все 5 значений можно получить в панели администратора хранилища_):
+- `S3_ACCESS_KEY_ID`
+- `S3_SECRET_ACCESS_KEY`
+- `S3_BACKET_NAME`
+- `S3_REGION`
+- `S3_SERVICE_URL`
+
+### Обновление CI/CD 
+
+> [!IMPORTANT]
+> После написание плагина от разработчика потребуется обновить некоторые поля в github actions yml файлах.
+
+#### [Файл сборка](.github/workflows/build-release.yml)
+Требуется обновить переменную `PATH_TO_CONFIG` в `env` на `src.[uniq plugin name].config`.
+
+
+## Тесты
+
+> [!WARNING]
+> Требуется дополнить некоторые тесты, которые помечены отметкой `!WARNING`
+
+В [тестах нагрузки](tests/payload/test_plugin_run.py) в функции `run_payload()` нужно обновить сигнатуру вызова (соответствие главному классу парсера).
+
+> [!TIP]
+> Последующие тесты с отметкой нужно просмотреть и обновить при необходимости. 
+
+> [!TIP]
+> Рекомендуется дополнять тесты для парсеров с необычной логикой.
+
