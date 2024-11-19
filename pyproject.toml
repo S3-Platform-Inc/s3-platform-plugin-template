@@ -7,7 +7,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-s3p-sdk = "^0.2.6"
+s3p-sdk = "^0.2.7"
 
 
 [tool.poetry.group.test.dependencies]
