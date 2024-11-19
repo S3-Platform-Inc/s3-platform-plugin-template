@@ -1,5 +1,9 @@
 # S3 Platform Plugin Template
 
+[![Test Plugin](https://github.com/S3-Platform-Inc/s3-platform-plugin-template/actions/workflows/plugin_test.yml/badge.svg)](https://github.com/S3-Platform-Inc/s3-platform-plugin-template/actions/workflows/plugin_test.yml)
+[![Release plugin](https://github.com/S3-Platform-Inc/s3-platform-plugin-template/actions/workflows/build-release.yml/badge.svg)](https://github.com/S3-Platform-Inc/s3-platform-plugin-template/actions/workflows/build-release.yml)
+[![Sync plugin to S3](https://github.com/S3-Platform-Inc/s3-platform-plugin-template/actions/workflows/sync-release.yml/badge.svg)](https://github.com/S3-Platform-Inc/s3-platform-plugin-template/actions/workflows/sync-release.yml)
+
 
 > [!NOTE]
 > Нажми на <kbd>Use this template</kbd> кнопку и клонируй его в IDE.
