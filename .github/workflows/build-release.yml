@@ -52,7 +52,7 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PLUGIN_RELEASE_TOKEN }}
       with:
         tag_name: ${{ steps.get_date.outputs.TAG_NAME }}
         release_name: Release ${{ steps.get_date.outputs.TAG_NAME }}
@@ -64,7 +64,7 @@ jobs:
     - name: Upload config.json to Release
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PLUGIN_RELEASE_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./${{env.CONFIG_FILE}}
@@ -73,7 +73,7 @@ jobs:
     - name: Upload config.json to Release
       uses: actions/upload-release-asset@v1
       env:
-        GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.PLUGIN_RELEASE_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: './plugin.xml'
