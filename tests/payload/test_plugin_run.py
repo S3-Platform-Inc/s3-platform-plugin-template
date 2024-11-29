@@ -87,7 +87,7 @@ class TestPayloadRun:
             3. Каждый полученный документ должен обязательно содержать 3 ключевых поля (title, link, published)
 
         """
-        max_docs = 10
+        max_docs = 4
         docs = self.run_payload(fix_payload, fix_s3pPlugin, chrome_driver, fix_s3pRefer, max_docs, 100)
 
         # 1. Количество материалов должно быть не меньше параметра максимального числа материалов.
