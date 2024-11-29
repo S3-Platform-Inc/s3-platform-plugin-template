@@ -75,24 +75,31 @@ class TestPayloadRun:
         else:
             assert False, "Тест проверяет payload плагина"
 
-    def test_run_with_0_docs_restriction(self, chrome_driver, fix_s3pRefer, fix_payload, fix_s3pPlugin):
-        # !WARNING Обновить тест для актуального парсера
-        max_docs = 10
-        docs = self.run_payload(fix_payload, fix_s3pPlugin, chrome_driver, fix_s3pRefer, max_docs)
-        assert len(docs) <= max_docs
+    def test_all_cases_with_once_executing_parser(self, chrome_driver, fix_s3pRefer, fix_payload, fix_s3pPlugin):
+        """
+        Test Case
 
-    def test_return_types(self, chrome_driver, fix_s3pRefer, fix_payload, fix_s3pPlugin):
-        # !WARNING Обновить тест для актуального парсера
-        max_docs = 10
-        docs = self.run_payload(fix_payload, fix_s3pPlugin, chrome_driver, fix_s3pRefer, max_docs)
-        assert isinstance(docs, tuple) and all([isinstance(el, S3PDocument) for el in docs])
+        Этот тест выполняет однократный запуск парсера, а затем проверяет ответ по нескольким параметрам.
 
-    def test_returned_parameters_are_sufficient(self, chrome_driver, fix_s3pRefer, fix_payload, fix_s3pPlugin):
-        # !WARNING Обновить тест для актуального парсера
-        max_docs = 10
-        docs = self.run_payload(fix_payload, fix_s3pPlugin, chrome_driver, fix_s3pRefer, max_docs)
+        Требования:
+            1. Количество материалов должно быть не меньше параметра максимального числа материалов.
+            2. Тип возвращаемых документов должен соответствовать S3PDocument
+            3. Каждый полученный документ должен обязательно содержать 3 ключевых поля (title, link, published)
+
+        """
+        max_docs = 4
+        docs = self.run_payload(fix_payload, fix_s3pPlugin, chrome_driver, fix_s3pRefer, max_docs, 100)
+
+        # 1. Количество материалов должно быть не меньше параметра максимального числа материалов.
+        assert len(docs) == max_docs, f"Payload вернул {len(docs)} материалов. А должен был {max_docs}"
+
+        # 2. Тип возвращаемых документов должен соответствовать S3PDocument
+        assert isinstance(docs, tuple) and all([isinstance(el, S3PDocument) for el in docs]), f"Тип возвращаемых документов должен соответствовать S3PDocument"
+
+        # 3. Каждый полученный документ должен обязательно содержать 3 ключевых поля (title, link, published)
         for el in docs:
-            assert el.title is not None and isinstance(el.title, str)
-            assert el.link is not None and isinstance(el.link, str)
-            assert el.published is not None and isinstance(el.published, datetime.datetime)
+            assert el.title is not None and isinstance(el.title, str), f"Документ {el} должен обязательно содержать ключевое поле title"
+            assert el.link is not None and isinstance(el.link, str), f"Документ {el} должен обязательно содержать ключевое поле link"
+            assert el.published is not None and isinstance(el.published, datetime.datetime), f"Документ {el} должен обязательно содержать ключевое поле published"
             assert el.hash
+
