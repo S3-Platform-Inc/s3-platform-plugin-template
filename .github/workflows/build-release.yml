@@ -45,6 +45,8 @@ jobs:
       run: echo "::set-output name=TAG_NAME::v$(date +'%Y%m%d%H%M%S')"
 
     - name: Create Tag
+      env:
+          GITHUB_TOKEN: ${{ secrets.PLUGIN_RELEASE_TOKEN }}
       run: |
         git tag ${{ steps.get_date.outputs.TAG_NAME }}
         git push origin ${{ steps.get_date.outputs.TAG_NAME }}
