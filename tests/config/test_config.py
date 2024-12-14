@@ -8,8 +8,9 @@ from s3p_sdk.plugin.types import PIPELINE, SOURCE, ML
 
 from tests.config.fixtures import fix_plugin_config, project_config
 from s3p_sdk.plugin.config import (
-    PluginConfig, CoreConfig, TaskConfig, MiddlewareConfig, PayloadConfig,
+    PluginConfig, CoreConfig, TaskConfig, MiddlewareConfig, PayloadConfig, RestrictionsConfig
 )
+import s3p_sdk.module as s3p_module
 
 
 class PluginStructure:
@@ -46,9 +47,12 @@ class TestConfigPlugin:
         _cplugin = fix_plugin_config.__dict__.get(PluginStructure.PLUGIN)
 
         assert isinstance(_cplugin.__dict__.get('reference'), str)
-        assert isinstance(_cplugin.__dict__.get('type'), str) and str(_cplugin.__dict__.get('type')) in (SOURCE, ML, PIPELINE)
-        assert isinstance(_cplugin.__dict__.get('files'), list) and all([isinstance(it, str) for it in _cplugin.__dict__.get('files')])
+        assert isinstance(_cplugin.__dict__.get('type'), str) and str(_cplugin.__dict__.get('type')) in (
+        SOURCE, ML, PIPELINE)
+        assert isinstance(_cplugin.__dict__.get('files'), list) and all(
+            [isinstance(it, str) for it in _cplugin.__dict__.get('files')])
         assert isinstance(_cplugin.__dict__.get('is_localstorage'), bool)
+        assert isinstance(_cplugin.__dict__.get('restrictions'), RestrictionsConfig)
 
     def test_config_plugin_files(self, fix_plugin_config, project_config):
         """Проверка наличия файлов плагина"""
@@ -76,8 +80,10 @@ class TestConfigPayload:
         _pentry = fix_plugin_config.__dict__.get(PluginStructure.PAYLOAD).__dict__.get('entry')
 
         assert isinstance(_pentry.__dict__.get('method'), str)
-        assert _pentry.__dict__.get('method') == 'content', f"Метод запуска плагина {_pentry.__dict__.get('method')} не соответствуе значению по умолчанию `content`"
-        assert isinstance(_pentry.__dict__.get('params'), list) and all([isinstance(it, AbcParamConfig) for it in _pentry.__dict__.get('params')])
+        assert _pentry.__dict__.get(
+            'method') == 'content', f"Метод запуска плагина {_pentry.__dict__.get('method')} не соответствуе значению по умолчанию `content`"
+        assert isinstance(_pentry.__dict__.get('params'), list) and all(
+            [isinstance(it, AbcParamConfig) for it in _pentry.__dict__.get('params')])
 
     def test_config_plugin_files(self, fix_plugin_config, project_config):
         """Проверка наличия файлов плагина"""
@@ -111,3 +117,17 @@ class TestConfigPayload:
         _cplugin = fix_plugin_config.__dict__.get(PluginStructure.PLUGIN)
 
         assert _cpayload.__dict__.get('file') in _cplugin.__dict__.get('files')
+
+
+@pytest.mark.pre_set
+class TestConfigMiddleware:
+
+    def test_modules_order(self, fix_plugin_config):
+        for i, module in enumerate(fix_plugin_config.middleware.modules):
+            assert module.order == i + 1, f"Module {module.name} should have order {i + 1}"
+
+    def test_modules_key_params(self, fix_plugin_config):
+        for i, module in enumerate(fix_plugin_config.middleware.modules):
+            assert isinstance(module.order, int)
+            assert isinstance(module.name, str)
+            assert isinstance(module.is_critical, bool)
