@@ -14,7 +14,7 @@ from selenium.webdriver.ie.webdriver import WebDriver
 
 from tests.config.fixtures import fix_plugin_config, project_config
 from tests.payload.fixtures import execute_timeout
-from s3p_sdk.types import S3PRefer, S3PDocument, S3PPlugin
+from s3p_sdk.types import S3PRefer, S3PDocument, S3PPlugin, S3PPluginRestrictions
 from s3p_sdk.plugin.types import SOURCE
 
 
@@ -65,7 +65,7 @@ class TestPayloadRun:
         # !WARNING Требуется изменить путь до актуального парсера плагина
         from src.s3_platform_plugin_template.template_payload import MyTemplateParser
         if isinstance(payload, type(MyTemplateParser)):
-            _payload = payload(refer=refer, plugin=_plugin, web_driver=driver, max_count_documents=max_document, last_document=None)
+            _payload = payload(refer=refer, plugin=_plugin, restrictions=S3PPluginRestrictions(max_document, None, None, None), web_driver=driver)
 
             @execute_timeout(timeout)
             def execute() -> tuple[S3PDocument, ...]:

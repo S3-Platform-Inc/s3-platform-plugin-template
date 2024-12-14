@@ -2,7 +2,7 @@ import datetime
 import time
 
 from s3p_sdk.plugin.payloads.parsers import S3PParserBase
-from s3p_sdk.types import S3PRefer, S3PDocument, S3PPlugin
+from s3p_sdk.types import S3PRefer, S3PDocument, S3PPlugin, S3PPluginRestrictions
 from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
@@ -15,9 +15,8 @@ class MyTemplateParser(S3PParserBase):
     A Parser payload that uses S3P Parser base class.
     """
 
-    def __init__(self, refer: S3PRefer, plugin: S3PPlugin, web_driver: WebDriver, max_count_documents: int = None,
-                 last_document: S3PDocument = None):
-        super().__init__(refer, plugin, max_count_documents, last_document)
+    def __init__(self, refer: S3PRefer, plugin: S3PPlugin, restrictions: S3PPluginRestrictions, web_driver: WebDriver):
+        super().__init__(refer, plugin, restrictions)
 
         # Тут должны быть инициализированы свойства, характерные для этого парсера. Например: WebDriver
         self._driver = web_driver
@@ -25,6 +24,7 @@ class MyTemplateParser(S3PParserBase):
 
     def _parse(self) -> None:
         for article in self._test_data():
+            time.sleep(0.5)
             self._find(article)
 
     def _test_data(self) -> list[S3PDocument]:
@@ -32,9 +32,15 @@ class MyTemplateParser(S3PParserBase):
             S3PDocument(None, "title-test-1", None, None, 'web-link-test-1', None, None, datetime.datetime.now(), None),
             S3PDocument(None, "title-test-2", None, None, 'web-link-test-2', None, None, datetime.datetime.now(), None),
             S3PDocument(None, "title-test-3", None, None, 'web-link-test-3', None, None, datetime.datetime.now(), None),
-            S3PDocument(None, "title-test-4", None, None, 'web-link-test-4', None, None, datetime.datetime.now(), None)
+            S3PDocument(None, "title-test-4", None, None, 'web-link-test-4', None, None, datetime.datetime.now(), None),
+            S3PDocument(None, "title-test-5", None, None, 'web-link-test-5', None, None, datetime.datetime.now(), None),
+            S3PDocument(None, "title-test-6", None, None, 'web-link-test-6', None, None, datetime.datetime.now(), None),
+            S3PDocument(None, "title-test-7", None, None, 'web-link-test-7', None, None, datetime.datetime.now(), None),
+            S3PDocument(None, "title-test-8", None, None, 'web-link-test-8', None, None, datetime.datetime.now(), None),
+            S3PDocument(None, "title-test-9", None, None, 'web-link-test-9', None, None, datetime.datetime.now(), None),
         ]
         return out
+
 
     def _example_parse_page(self, url: str) -> S3PDocument:
         doc = self._example_page_init(url)

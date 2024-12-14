@@ -211,28 +211,30 @@ pytest -v
 Ниже приведен пример парсера с подробным описанием.
 ```python
 from s3p_sdk.plugin.payloads.parsers import S3PParserBase
-from s3p_sdk.types import S3PRefer, S3PDocument, S3PPlugin
+from s3p_sdk.types import S3PRefer, S3PPlugin, S3PPluginRestrictions
+from s3p_sdk.exceptions.parser import S3PPluginParserOutOfRestrictionException, S3PPluginParserFinish 
+from selenium.webdriver.support.wait import WebDriverWait
+from selenium.webdriver.remote.webdriver import WebDriver
 
 class MyTemplateParser(S3PParserBase):
     """
-    Парсер плагина, который использует `S3PParserBase`
+    Parser plugin that uses `S3PParserBase`
     """
 
-    def __init__(self, refer: S3PRefer, plugin: S3PPlugin, web_driver: WebDriver, max_count_documents: int = None, last_document: S3PDocument = None):
+    def __init__(self, refer: S3PRefer, plugin: S3PPlugin, restrictions: S3PPluginRestrictions, web_driver: WebDriver):
         """
-        Конструктор парсера плагина.
+        Constructor for the parser plugin.
         
-        Обязательные параметры (передаются платформой):
-        :param:refer                    S3PRefer    -   источник, который обрабатывает плагин.
-        :param:plugin                   S3PPlugin   -   метаданные плагина.
+        Required parameters (passed by the platform):
+        :param refer: S3PRefer - the source processed by the plugin.
+        :param plugin: S3PPlugin - plugin metadata.
+        :param restrictions: S3PPluginRestrictions - restrictions for parsing (maximum_materials, to_last_material, from_date, to_date).
         
-        Вариативные параметры (Требуюется указать эти параметры в src/<uniq plugin name>/config.py):
-        :param:max_count_documents      int         -   максимальное число документов, которые должен собирать парсер.
-        
-        Остальные параметры могут не передаваться в конструктор класса. Они могут быть добавлены по желанию разработчика парсера. (Требуюется указать эти параметры в src/<uniq plugin name>/config.py).
-        Но, стоит учитывать правило "все, что может быть параметризовано - должно быть параметризовано".  
+        Other parameters can be added at the discretion of the parser developer.
+        (These parameters should be specified in src/<uniq plugin name>/config.py).
+        However, it's worth considering the rule "everything that can be parameterized should be parameterized".
         """
-        super().__init__(refer, plugin, max_count_documents, last_document)
+        super().__init__(refer, plugin, restrictions)
 
         # Тут должны быть инициализированы свойства, характерные для этого парсера. Например: WebDriver
         self._driver = web_driver
@@ -240,16 +242,27 @@ class MyTemplateParser(S3PParserBase):
 
     def _parse(self) -> None:
         """
-        Главные метод класса парсера, перегружающий метод класса `S3PParserBase`.
+        The main method of the parser class, overriding the method of the `S3PParserBase` class.
         
-        Этот метод будет вызван платформой при запуске парсера.
-        Это обязывает разработчика парсить источник в этом методе (безусловно, разработчик может создавать дополнительные методы внутри этого класса). 
+        This method will be called by the platform when the parser is launched.
+        This obliges the developer to parse the source in this method 
+        (of course, the developer can create additional methods within this class).
         """
         for article in self.test_data():
-            
-            # Метод self._find(:S3PDocument) вызывается при парсинге для того, чтобы отдать найденный документ платформе.
-            # Разработчик обязан использовать только этот метод при парсинге.
-            # Разработчику не нужно думать над тем, что происходит дальше. Платформа сама остановит работу парсера при выполнении ряда условий: собрано нужное число документов. 
-            self._find(article)
+            try:
+                # The self._find(:S3PDocument) method is called during parsing to give the found document to the platform.
+                # The developer must use only this method when parsing.
+                # The developer doesn't need to think about what happens next. 
+                # The platform itself will stop the parser's work when certain conditions are met: 
+                # the required number of documents has been collected, date restrictions are met, or the last document is found.
+                self._find(article)
+            except S3PPluginParserFinish as e:
+                # Parsing is finished due to restrictions
+                raise e
+            except S3PPluginParserOutOfRestrictionException:
+                # Document is out of date range, continue to next material.
+                # You can also use a restriction exception to skip irrelevant materials later on.
+                continue
+
 ```
 

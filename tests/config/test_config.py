@@ -8,7 +8,7 @@ from s3p_sdk.plugin.types import PIPELINE, SOURCE, ML
 
 from tests.config.fixtures import fix_plugin_config, project_config
 from s3p_sdk.plugin.config import (
-    PluginConfig, CoreConfig, TaskConfig, MiddlewareConfig, PayloadConfig,
+    PluginConfig, CoreConfig, TaskConfig, MiddlewareConfig, PayloadConfig, RestrictionsConfig,
 )
 
 
@@ -49,6 +49,7 @@ class TestConfigPlugin:
         assert isinstance(_cplugin.__dict__.get('type'), str) and str(_cplugin.__dict__.get('type')) in (SOURCE, ML, PIPELINE)
         assert isinstance(_cplugin.__dict__.get('files'), list) and all([isinstance(it, str) for it in _cplugin.__dict__.get('files')])
         assert isinstance(_cplugin.__dict__.get('is_localstorage'), bool)
+        assert isinstance(_cplugin.__dict__.get('restrictions'), RestrictionsConfig)
 
     def test_config_plugin_files(self, fix_plugin_config, project_config):
         """Проверка наличия файлов плагина"""
