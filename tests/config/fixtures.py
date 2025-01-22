@@ -34,12 +34,12 @@ class Project:
             raise FileNotFoundError(f"File not found {Path(dir) / 'plugin.xml'}")
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def project_config() -> Project:
     return Project(str(Path(__file__).parent.parent.parent))
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="session")
 def fix_plugin_config(project_config) -> PluginConfig:
     """Загружает конфигурацию из config.py файла по динамическому пути на основании конфигурации"""
     config_path = Path(project_config.root) / 'src' / project_config.name / 'config.py'
@@ -48,3 +48,8 @@ def fix_plugin_config(project_config) -> PluginConfig:
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
     return module.config
+
+
+@pytest.fixture(scope="session")
+def fix_necessary_payload_entry_params() -> tuple[str, ...]:
+    return 'refer', 'plugin', 'restrictions', 'self'

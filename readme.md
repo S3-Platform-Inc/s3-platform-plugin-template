@@ -28,6 +28,8 @@ S3 Platform Plugin Template - это репозиторий предоставл
   - [Тесты](#тесты)
     - [Как запустить тесты](#запуск-тестов)
 - [Правила написания парсера](#правила-написания-парсеров)
+- [Пример конфигурации](#примеры-конфигурации)
+  - [Конфигурация параметров запуска плагина](#пример-конфигурации-параметров-запуска-плагина)
 
 ## Быстрый старт
 
@@ -274,3 +276,16 @@ class MyTemplateParser(S3PParserBase):
 
 ```
 
+## Примеры конфигурации
+
+### Пример конфигурации параметров запуска плагина
+Ниже приведен пример конфигурации `payload.entry.params`. 
+```python
+from s3p_sdk.plugin.config import payload
+from s3p_sdk.module import WebDriver
+
+[
+    payload.entry.ModuleParamConfig(key='web_driver', module_name=WebDriver, bus=True), # Передается модуль
+    payload.entry.ConstParamConfig(key='url', value='url to the source page'), # Передается константа
+]
+```
