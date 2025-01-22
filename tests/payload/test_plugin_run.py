@@ -1,7 +1,7 @@
 import datetime
 import importlib.util
 import os
-from typing import Type
+from typing import Callable, Union
 
 import pytest
 from pathlib import Path
@@ -41,7 +41,7 @@ class TestPayloadRun:
         return S3PPlugin(1, 'unittests/repo/1', True, None, None, SOURCE, "3.0")
 
     @pytest.fixture(scope="module", autouse=True)
-    def fix_payload(self, project_config, fix_plugin_config) -> Type[S3PParserBase]:
+    def fix_payload(self, project_config, fix_plugin_config) -> S3PParserBase:
         MODULE_NAME: str = 's3p_test_plugin_payload'
         """Загружает конфигурацию из config.py файла по динамическому пути на основании конфигурации"""
         payload_path = Path(project_config.root) / 'src' / project_config.name / fix_plugin_config.payload.file
@@ -58,19 +58,13 @@ class TestPayloadRun:
         assert issubclass(parser_class, S3PParserBase), f"{class_name} is not a subclass of S3PParserBase."
         return parser_class
 
-    def run_payload(self, payload: Type[S3PParserBase], _plugin: S3PPlugin, driver: WebDriver, refer: S3PRefer, max_document: int):
+    def run_payload(self, payload: Union[S3PParserBase, Callable], _plugin: S3PPlugin, driver: WebDriver, refer: S3PRefer, max_document: int):
 
-        # !WARNING Требуется изменить путь до актуального парсера плагина
-        from src.s3_platform_plugin_template.template_payload import MyTemplateParser
-
-        if isinstance(payload, type(MyTemplateParser)):
-            _payload = payload(
-                refer=refer,
-                plugin=_plugin,
-                restrictions=S3PPluginRestrictions(max_document, None, None, None), web_driver=driver)
-            return _payload.content()
-        else:
-            assert False, "Тест проверяет payload плагина"
+        _payload = payload(
+            refer=refer,
+            plugin=_plugin,
+            restrictions=S3PPluginRestrictions(max_document, None, None, None), web_driver=driver)
+        return _payload.content()
 
     # !WARNING: Изменить максимальное время работы плагина из логических соображений
     @pytest.mark.timeout(20)
