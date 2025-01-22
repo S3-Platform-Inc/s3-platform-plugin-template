@@ -3,7 +3,7 @@ name = "s3-platform-plugin-template"
 version = "0.3.0"
 description = "A repository that provides a pure template to make it easier to create a new plugin project"
 authors = ["CuberHuber, Roman Lupashko <lupashcko.rom@yandex.ru>"]
-readme = "README.md"
+readme = "readme.md"
 
 [tool.poetry.dependencies]
 python = "^3.11"
