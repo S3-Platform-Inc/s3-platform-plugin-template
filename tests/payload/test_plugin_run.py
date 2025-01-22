@@ -2,7 +2,6 @@ import datetime
 import importlib.util
 import os
 from typing import Type
-import sys
 
 import pytest
 from pathlib import Path
@@ -13,7 +12,6 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.ie.webdriver import WebDriver
 
 from tests.config.fixtures import fix_plugin_config, project_config
-from tests.payload.fixtures import execute_timeout
 from s3p_sdk.types import S3PRefer, S3PDocument, S3PPlugin, S3PPluginRestrictions
 from s3p_sdk.plugin.types import SOURCE
 
@@ -60,21 +58,22 @@ class TestPayloadRun:
         assert issubclass(parser_class, S3PParserBase), f"{class_name} is not a subclass of S3PParserBase."
         return parser_class
 
-    def run_payload(self, payload: Type[S3PParserBase], _plugin: S3PPlugin, driver: WebDriver, refer: S3PRefer, max_document: int,
-                    timeout: int = 2):
+    def run_payload(self, payload: Type[S3PParserBase], _plugin: S3PPlugin, driver: WebDriver, refer: S3PRefer, max_document: int):
+
         # !WARNING Требуется изменить путь до актуального парсера плагина
         from src.s3_platform_plugin_template.template_payload import MyTemplateParser
+
         if isinstance(payload, type(MyTemplateParser)):
-            _payload = payload(refer=refer, plugin=_plugin, restrictions=S3PPluginRestrictions(max_document, None, None, None), web_driver=driver)
-
-            @execute_timeout(timeout)
-            def execute() -> tuple[S3PDocument, ...]:
-                return _payload.content()
-
-            return execute()
+            _payload = payload(
+                refer=refer,
+                plugin=_plugin,
+                restrictions=S3PPluginRestrictions(max_document, None, None, None), web_driver=driver)
+            return _payload.content()
         else:
             assert False, "Тест проверяет payload плагина"
 
+    # !WARNING: Изменить максимальное время работы плагина из логических соображений
+    @pytest.mark.timeout(20)
     def test_all_cases_with_once_executing_parser(self, chrome_driver, fix_s3pRefer, fix_payload, fix_s3pPlugin):
         """
         Test Case
@@ -87,8 +86,8 @@ class TestPayloadRun:
             3. Каждый полученный документ должен обязательно содержать 3 ключевых поля (title, link, published)
 
         """
-        max_docs = 4
-        docs = self.run_payload(fix_payload, fix_s3pPlugin, chrome_driver, fix_s3pRefer, max_docs, 100)
+        max_docs = 9
+        docs = self.run_payload(fix_payload, fix_s3pPlugin, chrome_driver, fix_s3pRefer, max_docs)
 
         # 1. Количество материалов должно быть не меньше параметра максимального числа материалов.
         assert len(docs) == max_docs, f"Payload вернул {len(docs)} материалов. А должен был {max_docs}"

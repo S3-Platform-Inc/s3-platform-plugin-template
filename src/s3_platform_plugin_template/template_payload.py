@@ -24,7 +24,7 @@ class MyTemplateParser(S3PParserBase):
 
     def _parse(self) -> None:
         for article in self._test_data():
-            time.sleep(0.5)
+            time.sleep(1)
             self._find(article)
 
     def _test_data(self) -> list[S3PDocument]:
