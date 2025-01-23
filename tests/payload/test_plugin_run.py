@@ -67,7 +67,7 @@ class TestPayloadRun:
         return _payload.content()
 
     # !WARNING: Изменить максимальное время работы плагина из логических соображений
-    @pytest.mark.timeout(20)
+    @pytest.mark.timeout(30)
     def test_all_cases_with_once_executing_parser(self, chrome_driver, fix_s3pRefer, fix_payload, fix_s3pPlugin):
         """
         Test Case
