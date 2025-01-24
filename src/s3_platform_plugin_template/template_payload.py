@@ -24,7 +24,7 @@ class MyTemplateParser(S3PParserBase):
 
     def _parse(self) -> None:
         for article in self._test_data():
-            time.sleep(1)
+            time.sleep(0.4)
             self._find(article)
 
     def _test_data(self) -> list[S3PDocument]:
@@ -38,6 +38,10 @@ class MyTemplateParser(S3PParserBase):
             S3PDocument(None, "title-test-7", None, None, 'web-link-test-7', None, None, datetime.datetime.now(), None),
             S3PDocument(None, "title-test-8", None, None, 'web-link-test-8', None, None, datetime.datetime.now(), None),
             S3PDocument(None, "title-test-9", None, None, 'web-link-test-9', None, None, datetime.datetime.now(), None),
+            S3PDocument(None, "title-test-10", None, None, 'web-link-test-10', None, None, datetime.datetime.now() + datetime.timedelta(days=1), None),
+            S3PDocument(None, "title-test-11", None, None, 'web-link-test-11', None, None, datetime.datetime.now() + datetime.timedelta(days=2), None),
+            S3PDocument(None, "title-test-12", None, None, 'web-link-test-12', None, None, datetime.datetime.now() + datetime.timedelta(days=3), None),
+            S3PDocument(None, "title-test-13", None, None, 'web-link-test-13', None, None, datetime.datetime.now() + datetime.timedelta(days=4), None),
         ]
         return out
 
